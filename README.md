@@ -1,182 +1,135 @@
 # Adventure game
-3.1 Ý tưởng của game:
-- Đây là một game thể loại đi ải, người chơi sẽ được cấp ba nhân vật lần lượt là Tank, Warrior và Wizard. Mỗi nhân vật đều có các chỉ số cơ bản là : HP (máu), ATK (công), DEF (thủ) cùng với kĩ năng của từng nhân vật. Trong đó:
-+ Tank có thêm chỉ số về giáp : ARM và kĩ năng là tăng giáp (buffARM). Khi bị lần công thì sẽ không trừ trực tiếp vào máu mà sẽ trừ vào giáp trước. Ví dụ đòn tấn công có giá trị là _ATK (_ATK >DEF)
-ARM = ARM – (_ATK -DEF).
-Nếu ARM < 0 thì :
-	HP = HP +ARM
-	ARM = 0;
-+ Warrior có đặc điểm là có thể tấn công xuyên qua giáp của đối phương cùng với kĩ năng tăng cường ATK trong một lượt tấn công vào kẻ địch.
-+ Wizard có đặc điểm là sau khi công qua phần thủ của kẻ địch thì sức mạnh của đòn tấn công sẽ nhân 1.5 lần. Ví dụ kẻ địch có lớp phòng thủ là _DEF thì khi Wizard tấn công vào kẻ địch (_ARM, _HP):
-	_ARM = ARM – 1.5*(_ATK - DEF)
-Nếu ARM < 0 thì :
-	HP = HP +ARM
-	ARM = 0;
-Kĩ năng của Wizard là đốt trực tiếp vào máu của toàn bộ tất cả kẻ địch một lượng nhất định (tăng theo cấp độ của kĩ năng).
-- Các nhân vật chỉ có thể sử dụng kĩ năng duy nhất một lần trong lần trong mỗi chapter, khi qua chapter thì sẽ được khôi phục lại kĩ năng cũng như HP ban đầu và được thưởng một số tiền.
-- Người chơi sẽ sử dụng tiền để nâng cấp cấp độ của kĩ năng hoặc vào của hàng để mua các trang bị để tăng chỉ số cho các nhân vật. Các trang bị là:
-+ Helmet : tăng chỉ số DEF
-+ Armor : tăng chỉ số DEF
-+ Weapon: tăng chỉ số ATK
-+ DrugArm : hồi phục ARM ( chỉ có thể sử dụng cho Tank)
-+ DrugHp : tăng HP 
-	- Mỗi nhân vật sẽ có thể trang bị tối đa 1 Helmet, 1 Armor và 1 Weapon. Khi mua trang bị cho nhân vật một trang bị mới thì trang bị cũ sẽ bị tháo ra để cập nhật lại trang bị.
-	- Kĩ năng của nhân vật sẽ được chia thành 3 cấp 1,2,3 với các chỉ số tăng lên
-+ Tank (buffARM) : 500 -> 700 -> 1000
-+ Warrior (buffATK) : 500 -> 700 -> 1000
-+ Wizard (attack all) : 200 -> 300 ->500
+## Implement: 
+C++ , OOP
+## Description:
+### 3.1 Game Concept:
+- This is a role-playing game, in which players will be given three characters: Tank, Warrior, and Wizard. Each character has basic stats including: HP (health points), ATK (attack), DEF (defense), and their own unique skills. Specifically:
+Tank has an additional stat called ARM (armor) and a skill to buff ARM. When attacked, damage will first be reduced from ARM before being taken from HP. For example, if the enemy's attack value is _ATK (_ATK >DEF):
+	- ARM = ARM - (_ATK -DEF).
+	- If ARM < 0 then:
+	- HP = HP + ARM
+	- ARM = 0;
+- Warrior can penetrate the enemy's armor with their attacks, along with a skill to boost ATK in one turn.
+- Wizard has a skill where their attack strength will be multiplied by 1.5 after going through the enemy's defense. For example, if the enemy's DEF value is _DEF, when Wizard attacks the enemy (_ARM, _HP):
+	- _ARM = ARM - 1.5*(_ATK - DEF)
+	- If ARM < 0 then:
+	- HP = HP + ARM
+	- ARM = 0;
+- Wizard's skill is to deal direct damage to all enemies' HP (amount increases with skill level).
+- Characters can only use their skill once per chapter, and after each chapter, their skill and HP will be restored, and players will be rewarded with some money.
+- Players can use their money to upgrade the skill levels or buy equipment to increase their characters' stats. The available equipment are:
+	- Helmet: increases DEF
+	- Armor: increases DEF
+	- Weapon: increases ATK
+	- DrugArm: restores ARM (only usable for Tank)
+	- DrugHp: increases HP
+- Each character can equip one Helmet, one Armor, and one Weapon at most. When buying new equipment for a character, the old equipment will be removed and replaced with the new one.
+Character skills will be divided into three levels: 1, 2, 3, with increasing stats:
+	- Tank (buffARM): 500 -> 700 -> 1000
+	- Warrior (buffATK): 500 -> 700 -> 1000
+	- Wizard (attack all): 200 -> 300 -> 500
+### 3.2 Game Structure:
+#### 3.2.1 Game structure diagram (attached draw.io file)
+- The game structure is divided into 3 main groups:
+	- Skill: containing information about skills (abstract class)
+	- Item: containing information about equipment (abstract class)
+	- Character: containing information about characters (abstract class)
+- There are also child classes:
+	- Player: containing information about the player
+	- Enemy: containing information about the enemy
+	- Store: containing information about the store
+	- Battle: containing information about the enemy and player to conduct the game.
+#### 3.2.2 Skill class (in skill.h file)
+- Skill class will be an abstract class, containing the following parameters:
+	- state: usage state (1: not used, 0: used)
+	- level: level of the skill (1, 2, 3)
+	- name: name of the skill
+	- description: description of the skill
+	- target: target of the skill (enemy, all enemies, self, etc.)
+	- power: strength of the skill (damage, heal, buff, etc.)
+	- mpCost: cost of the skill in MP (magic points)
+	- use(): a virtual function that will be implemented by each subclass to define the specific effects of the skill when used by a 
+#### 3.2.3 Item class (in item.h file)
+-The Item class will also be an abstract class, containing information about:
+	- name: the name of the item
+	- description: a brief description of the item's effects
+	- price: the cost of the item in the store
+	- use(): a virtual function that will be implemented by each subclass to define the specific effects of the item when used by a character.
+#### 3.2.4 Character class (in character.h file)
+-The Character class will be an abstract class, containing information about:
+	- name: the name of the character
+	- HP: the health points of the character
+	- ATK: the attack stat of the character
+	- DEF: the defense stat of the character
+	- ARM: the armor stat of the character (only applicable to Tank)
+	- level: the level of the character, which determines its stats and the level of its skills
+	- skill1, skill2, skill3: pointers to Skill objects representing the character's skills
+	- helmet, armor, weapon: pointers to Item objects representing the character's equipment
+	- useSkill(int skillIndex): a function that will use the skill corresponding to the specified index (1, 2, or 3)
+	- equipItem(Item* item): a function that will equip the specified item, replacing the current item of the same type
+	- unequipItem(Item* item): a function that will remove the specified item from the character's equipment, replacing it with a default item of the same type.
+#### 3.2.5 Player class (in player.h file)
+-The Player class will inherit from the Character class, and will also contain information about:
+	- balance: the amount of money the player currently has
+	- inventory: a vector of Item pointers representing the items the player currently has in their inventory
+	- buyItem(Item* item): a function that will add the specified item to the player's inventory, subtracting the item's price from the player's balance
+	- sellItem(Item* item): a function that will remove the specified item from the player's inventory, adding the item's price to the player's balance.
+#### 3.2.6 Enemy class (in enemy.h file)
+-The Enemy class will also inherit from the Character class, and will contain information about the enemy's type and any special abilities or weaknesses it may have. Each enemy will have a unique name and stats.
+### 3.3 How to play:
+- Firstly, when entering the game, there will be a basic introduction interface about how to play.
 
+- The player will choose the level they want to participate in (can only participate in the level when they have won the previous level). Therefore, when just starting, the player will choose the first level.
 
+- After selecting the level, the program will print out the parameters of the player's characters regarding ATK, DEF, ARM, HP, and skill level along with the amount of money the player has ($500). These are the default parameters of the characters.
 
+##### Upgrade skills
 
-3.2 Cấu trúc của game:
-3.2.1 Sơ đồ cấu trúc của game (file draw.io đính kèm)
+- Next, the player will choose whether to upgrade their skills or not. If they want to, they will press 1 and 0 to continue.
 
- 
+- Suppose the player chooses 1 and starts upgrading their skills.
 
-- Cấu trúc của game sẽ phân thành 3 nhóm chính:
-+ Skill : chứa thông tin về kĩ năng (lớp trừu tượng)
-+ Item : chứa thông tin về trang bị (lớp trừu tượng)
-+ Character: chứa thông tin về nhân vật (lớp trừu tượng)
-- Ngoài ra còn các class con cùng với các class:
-+ Player : chứa thông tin người chơi
-+ Enemy : chứa thông tin về quân địch
-+ Store : chứa thông tin của cửa hàng
-+ Battle: bao gồm thông tin của kẻ thù và quân địch để tiến hành chơi.
-3.2.2 Lớp Skill (trong file skill.h)
- 
--Lớp Skill sẽ là lớp trừu tượng, chứa các thông số về
-+ state: trạng thái sử dụng (1: chưa dùng, 0: đã dùng)
-+ level: cấp của kĩ năng
-+ priceToUp : chi phí để nâng cấp kĩ năng
-+ num: chỉ số của kĩ năng 
-+ Các hàm để kiểm tra các thông số cũng như lấy các chỉ số của kĩ năng
-- Lớp Skill sẽ có 3 lớp con sẽ chứa các thông số mặc định cho từng nhân vật cùng với 2 hàm upLevel() và getNextNum() riêng.
-+ SkillTank
-+ SkillWarrior
-+ SkillWizard
-3.2.3 Lớp Store và Item (trong file store.h) 
- 
--Lớp Item sẽ là lớp trừu tượng, chứa các thông số về
-+ price: giá cả của trang bị
-+ type : kiểu trang bị
-+ các hàm để lấy thông tin của các trang bị
-- Các lớp con của lớp Item
-+ Helmet : tăng DEF
-+ Armor : tăng DEF
-+ Weapon : tăng ATK
-+ DrugArm : tăng ARM
-+ DrugHp : tăng HP
--	Lớp Store sẽ chứa các thông tin về cửa hàng trang bị
-+ items [5][3] chứa thông tin của 5 loại trang bị cơ bản cùng với ba cấp độ chất lượng (Basic, Medium, Advance)
-+ Hàm printitems() để in ra các trang bị của cửa hàng cùng với giá tiền
- 
-+ Hàm getItems() để lấy trang bị trong của hàng theo tên 
-3.2.4 Lớp Character (trong file store.h) 
- 
-- Lớp Character là một lớp trừu tượng, chứa các thông tin của các nhân vật trong game về:
-+ DEF : chỉ số phòng thủ
-+ ATK : chỉ số tấn công
-+ HP : máu
-+ items[3] : chứa các trang bị (0: Helmet, 1: Armor, 2:Weapon)
-+ skill : thông tin về kĩ năng của nhân vật
-+ type : kiểu nhân vật
-+ các hàm 
-. attack: tấn công
-. defend: phong thủ
-. turnOnSkill : sử dụng kĩ năng
-. putOnArmDrug : sử dụng thuốc giáp (chỉ dành riêng cho Tank)
-. print: in thông tin của nhân vật
-. getARM : lấy chỉ số giáp của nhân vật (chỉ dành riêng cho Tank)
-. resetHP : trả về số máu mặc định sau khi qua màn
-. putOn: trang bị các vật phẩm (Helmet, Armor, ...)
-. alive : kiểm tra xem nhân vật còn sống không 
-- Các lớp con của lớp Character lần lượt chứa các chỉ số mặc định và các hàm đặc trưng cho bản thân nhân vật:
-+ Tank / Warrior / Wizard
-+ Monster
-+ Boss 
+- Next, the player will enter the character they want to upgrade.
 
-3.2.5 Lớp Character (trong file store.h) 
- 
-- Lớp Player: chứa thông tin của người chơi
-+ money : số tiền hiện tại của người chơi (dùng để nâng cấp và mua trang bị)
-+ phương thức goToStore để đi vào của hàng mua trang bị
-+ phương thức hàm earnMoney để cập nhật tiền sau khi qua màn
-+ phương thứ checkLoss kiểm tra xem người chơi đã thua chưa (thua khi toàn bộ quân ta đều có HP = 0)
-+ phương thức printFull để in thông tin toàn bộ nhân vật của người chơi
-+ phương thức printHpArm để in các thông tin về máu và giáp của nhân vật
-- Lớp Enemy: chứa các thông tin của quân địch
-+ nMonster : số lượng Monster
-+ nBoss : số lượng Boss
-+ cMon chứa thông tin về các Monster
-+ cBoss : chứa thông tin của Boss
-+ phương thức attack () tấn công người chơi của enemy
-+ phương thức checkWin kiểm tra xem người chơi đã thắng chưa (thắng khi toàn bộ quân địch đều có HP = 0)
-+ phương thức printFull để in thông tin toàn bộ nhân vật của quân địch
-+ phương thức printHpArm để in các thông tin về máu và giáp của nhân vật
-- Lớp Battle chứa các thông tin về trận chiến:
-+ player : người chơi
-+ enemy : quân địch
-+ store : cừa hàng
-+ chapters[5] để lưu lại trạng thái, người chơi chỉ có thể thàm gia vào 1 chapter sau khi đã chiến thắng ở chapter trước đó
-+ phương thức upLevel() để nâng cấp kĩ năng nhân vật
-+ phương thức attackEnemy() để người chơi tấn công quân địch
-+ phương thức play() : bắt đầu trò chơi
+- Suppose the player chooses to upgrade the skill of the Tank character. At this point, the program will show the price to upgrade, the cost of upgrading, and the status after upgrading the skill. If the player chooses to upgrade, they will upgrade if the player has enough money. The program will print out a successful upgrade if they have enough money, and if they don't, the program will display an error message.
 
+- Then the player can choose whether to continue upgrading or not. If they want to, they will continue upgrading.
 
+##### Go to the store to buy equipment
+- After selecting the store, the store interface will appear:
 
+- The player will enter the name of the equipment they want to buy, for example, Basic Armor.
 
+- Then choose the character they want to equip and finally see the character's stats after equipping that equipment.
 
+- In the example, the player chooses to buy Basic Armor with a stat of +100DEF. Then, the Tank character will increase DEF from 500 to 600 after equipping the item.
 
-3.3 Cách chơi:
- 
-- Đầu tiên khi vào trò chơi sẽ có giao diện giới thiệu cơ bản về cách chơi: 
- 
-- Người chơi sẽ chọn màn mình muốn tham gia (chỉ có thể tham gia màn khi đã chiến thắng màn trước đó ). Vì vậy khi vừa vào người chơi sẽ chọn màn đầu tiên
- 
-- Sau khi chọn màn chương trình sẽ in ra các thông số về các nhân vật của người chơi về ATK, DEF, ARM, HP và Level skill cùng với số tiền người chơi đang có (500$ ). Đây là các thông số mặc định của các nhân vật.
-* Nâng cấp kĩ năng
-- Tiếp theo người chơi sẽ chọn xem có muốn nâng cấp kĩ năng hay không. Nếu muốn sẽ chọn phím 1 và 0 để tiếp tục.
-- Giả sử người chơi chọn phím 1 và bắt đầu nâng cấp kĩ năng
- 
-- Tiếp theo sẽ nhập nhân vật người chơi muốn nâng cấp
- 
-- Giả sử người chơi chọn nâng cấp kĩ năng cho nhân vật Tank thì lúc này chương trình sẽ in ra giá để nâng cấp, chi phí nâng cấp cùng với trạng thái sau khi nâng cấp kĩ năng. Nếu người chơi chọn nâng cấp thì sẽ nâng cấp nếu người chơi có đủ tiền thì chương trình sẽ in ra nâng cấp thành công nếu không đủ thì sẽ chương trình sẽ báo.
- 
-- Sau đó người chơi được lựa chọn xem có muốn tiếp tục nâng cấp hay không. Nếu muốn sẽ tiếp tục nâng cấp.
- 
-*Vào cửa hàng để mua trang bị
-Sau khi chọn vào cửa hàng thì sẽ xuất hiện giao diện của cửa hàng:
- 
-- Người chơi sẽ nhập tên trang bị mình muốn mua: ví dụ là Basic Armor
-- Sau đó chọn nhân vật mình muốn trang bị và cuối cùng là xem chỉ số nhân vật sau khi trang bị trang bị đó
- 
-- Trong ví dụ người chơi chọn mua Basic Armor có chỉ số là +100DEF thì Tank sau khi trang bị vật phẩm sẽ tăng DEF từ 500->600
-- Sau đó nếu muốn nâng cấp tiếp thì chọn 1 hăojc 0 để rời khỏi cửa hàng.
- 
-* Trận chiến
-- Sau khi rời khỏi cửa hàng thì người chơi sẽ tiến hành chiến đấu với kẻ địch
- 
-- Lượt đầu tiên sẽ là của người chơi, người chơi sẽ cho lần lượt các nhân vật của mình là Tank, Warrior và Wizard tấn công kẻ địch được chọn. Người chơi có thể kích hoạt kĩ năng nếu muốn. Tuy nhiên kĩ năng chỉ được sử dụng duy nhất một lần trong mỗi màn. Nếu qua màn thì kĩ năng sẽ được reset
-+ Lượt của Tank
- 
+- Then, if the player wants to continue upgrading, they will press 1, and if not, they will press 0 to exit the store.
 
-+ Lượt của Warrior
- 
-+ Lượt của Wizard
- 
-- Sau khi người chơi kết thúc lượt sẽ đến quân địch. Quân địch mặc địch tấn công theo thứ tự Tank, Warrior rồi mới tới Wizard
- 
-- Sau đó tới lượt của người chơi và lặp lại đến khi nào toàn bộ kẻ địch bị tiêu diệt hoặc toàn bộ nhân vật của người chơi bị tiêu diệt.
-+ Lượt người chơi
- 
-+ Lượt kẻ địch
- 
-+ Lượt người chơi
- 
-- Sau khi toàn bộ kẻ địch bị tiêu diệt thì người chơi sẽ chiến thắng
- 
-- Sau đó người chơi có thể tiếp tục chơi tiếp hoặc thoát khỏi trò chơi.
- 
- 
-- Khi tiếp tục chap 2 người chơi sẽ được cấp thêm tiền sau khi đã giành chiến thắng và có thể vào cửa hàng để mua trang bị hoặc nâng cấp kĩ năng.
+##### Battle
+
+- After leaving the store, the player will engage in a battle with the enemy.
+
+- The first turn will be the player's, and they will take turns attacking the selected enemy with their characters, Tank, Warrior, and Wizard, respectively. The player can activate skills if they want. However, skills can only be used once per level. If they pass the level, the skills will be reset.
+
+	- Turn of Tank
+
+	- Turn of Warrior
+
+	- Turn of Wizard
+
+	- After the player finishes their turn, it will be the enemy's turn. The enemy will attack in the order of Tank, Warrior, and then Wizard by default.
+
+- Then it will be the player's turn again, and this will be repeated until all enemies are defeated or all player characters are defeated.
+
+- Player's turn
+
+- Enemy's turn
+
+- Player's turn
+
+- After all enemies are defeated, the player will win.
+
+- Then, the player can choose whether to continue playing or not. If they want to, they will return to the level selection interface, and if not, they will exit the game.
+
+- When continuing chapter 2, players will be given additional money after winning and can go to the shop to buy equipment or upgrade their skills.
