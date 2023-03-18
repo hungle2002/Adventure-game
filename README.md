@@ -1,6 +1,6 @@
 # Adventure game
 ## Implement: 
-C++ , OOP
+C++ (OOP)
 ## Description:
 ### 3.1 Game Concept:
 - This is a role-playing game, in which players will be given three characters: Tank, Warrior, and Wizard. Each character has basic stats including: HP (health points), ATK (attack), DEF (defense), and their own unique skills. Specifically:
