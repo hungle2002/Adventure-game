@@ -1,7 +1,4 @@
-# simple_game_C_plus_plus
-Chương 3: 
- 				Simple C++ game
-				
+# simple_game_C_plus_plus	
 3.1 Ý tưởng của game:
 - Đây là một game thể loại đi ải, người chơi sẽ được cấp ba nhân vật lần lượt là Tank, Warrior và Wizard. Mỗi nhân vật đều có các chỉ số cơ bản là : HP (máu), ATK (công), DEF (thủ) cùng với kĩ năng của từng nhân vật. Trong đó:
 + Tank có thêm chỉ số về giáp : ARM và kĩ năng là tăng giáp (buffARM). Khi bị lần công thì sẽ không trừ trực tiếp vào máu mà sẽ trừ vào giáp trước. Ví dụ đòn tấn công có giá trị là _ATK (_ATK >DEF)
