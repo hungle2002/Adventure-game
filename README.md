@@ -29,6 +29,7 @@ Character skills will be divided into three levels: 1, 2, 3, with increasing sta
 	- Warrior (buffATK): 500 -> 700 -> 1000
 	- Wizard (attack all): 200 -> 300 -> 500
 ### 3.2 Game Structure:
+Design using draw.io:https://drive.google.com/file/d/1G1zZ-SIPv5X4iGcTDdelyC8umX8_dq64/view?usp=sharing
 #### 3.2.1 Game structure diagram (attached draw.io file)
 - The game structure is divided into 3 main groups:
 	- Skill: containing information about skills (abstract class)
